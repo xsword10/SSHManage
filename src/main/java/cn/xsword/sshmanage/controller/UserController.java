@@ -1,42 +1,81 @@
 package cn.xsword.sshmanage.controller;
 
+import cn.xsword.sshmanage.DTO.LoginDTO;
 import cn.xsword.sshmanage.DTO.UserDTO;
 import cn.xsword.sshmanage.DTO.UserRegisterDTO;
 import cn.xsword.sshmanage.entity.User;
+import cn.xsword.sshmanage.entity.UserDetailsImpl;
 import cn.xsword.sshmanage.service.UserService;
 import cn.xsword.sshmanage.util.InputVerify;
+import cn.xsword.sshmanage.util.JwtUtil;
 import cn.xsword.sshmanage.util.SSHManageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+
+
+/**
+ * @Program: sshManage
+ * @author: xsword
+ * @create: 2025-07-08 15:14
+ * @description: UserController, 用户注册、登陆、注销等
+ **/
 @RestController
 @RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @GetMapping("/checkhealth")
     public SSHManageResponse check() {
         return SSHManageResponse.success("996748");
     }
 
+    /**
+     * @Description: 用户登陆
+     * @Author: xsword
+     * @Date: 2025/7/9
+    **/
     @CrossOrigin
     @PostMapping("/login")
     public SSHManageResponse login(@RequestBody UserDTO userDTO) {
         String username = userDTO.getUsername();
         String password = userDTO.getPassword();
-        //System.out.println(username + " " +  password);
         if(!(InputVerify.usernameVerify(username) && InputVerify.passwordVerify(password))) {
             return SSHManageResponse.error("用户名密码不合法！请重新输入！");
         }
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        int res = userService.selectUser(user);
 
-        return res > 0 ? SSHManageResponse.success("登陆成功！") : SSHManageResponse.error("用户名或密码错误！");
+        try {
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+            Authentication authentication = authenticationManager.authenticate(token);
+            User user = ((UserDetailsImpl)authentication.getPrincipal()).getUser();
+
+            String jwt = JwtUtil.createJWT(String.valueOf(user.getUserId()));
+            LoginDTO loginDTO = new LoginDTO();
+            loginDTO.setUsername(username);
+            loginDTO.setNickname("里斯特");
+            loginDTO.setPhoto("../picture/default.jpg");
+            loginDTO.setJwt(jwt);
+
+            return SSHManageResponse.success("登陆成功！", loginDTO);
+        }catch (Exception e){
+            return SSHManageResponse.error("登陆失败！" +  e.getMessage());
+        }
     }
 
+    /**
+     * @Description: 用户注册，code内定，密码加密后存储
+     * @Author: xsword
+     * @Date: 2025/7/9
+    **/
     @CrossOrigin
     @PostMapping("/register")
     public SSHManageResponse register(@RequestBody UserRegisterDTO userDTO) {
@@ -54,11 +93,17 @@ public class UserController {
         }
 
         try {
+            /*
+             *TODO
+             * 线程安全问题
+             * 算了，直接在数据库中加unique完事了，多线程失败了就是资本做局了。
+             */
             int res = userService.selectUserByUsername(username);
             if(res == 0) {
                 User user = new User();
                 user.setUsername(username);
-                user.setPassword(password);
+                String encodePassword = passwordEncoder.encode(password);
+                user.setPassword(encodePassword);
                 userService.insertUser(user);
                 return SSHManageResponse.success("注册成功！欢迎您成为高贵的SSHManage用户!");
             }else {
@@ -70,5 +115,12 @@ public class UserController {
         }finally {
             ;
         }
+    }
+
+    @CrossOrigin
+    @PostMapping("/logout")
+    public SSHManageResponse logout() {
+        System.out.println("=================");
+        return SSHManageResponse.success("?");
     }
 }

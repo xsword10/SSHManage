@@ -5,6 +5,12 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
+/**
+ * @Program: sshManage
+ * @author: xsword
+ * @create: 2025-07-08 14:12
+ * @description: 服务器信息实体类
+ **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

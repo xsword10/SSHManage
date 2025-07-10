@@ -25,8 +25,13 @@ function userLogin() {
 
 function loginSuccess(result) {
     if(result.code == 200) {
+        var data = result.data;
         alert(result.message);
-        window.location.href = "../page/login.html";
+        setCookie('jwt', data.jwt);
+        setCookie('username', data.username);
+        setCookie('nickname', data.nickname);
+        setCookie('photo', data.photo);
+        window.location.href = "../page/machineManage.html";
     }else {
         alert(result.message);
         window.location.href = "../page/login.html";

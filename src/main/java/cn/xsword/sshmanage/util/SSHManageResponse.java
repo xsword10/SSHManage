@@ -3,9 +3,15 @@ package cn.xsword.sshmanage.util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * @Program: sshManage
+ * @author: xsword
+ * @create: 2025-07-08 18:32
+ * @description: 自定义http返回类型,其中data用以存放jwt
+ **/
 @Data
 @AllArgsConstructor
-public class SSHManageResponse {
+public class SSHManageResponse<T> {
     private long code;
     private String message;
     private Object data;
