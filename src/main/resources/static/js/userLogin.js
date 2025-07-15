@@ -27,6 +27,7 @@ function loginSuccess(result) {
     if(result.code == 200) {
         var data = result.data;
         alert(result.message);
+        setCookie('isLogin', "1");
         setCookie('jwt', data.jwt);
         setCookie('username', data.username);
         setCookie('nickname', data.nickname);

@@ -1,5 +1,7 @@
 package cn.xsword.sshmanage.util;
 
+import java.util.Random;
+
 /**
  * @Program: sshManage
  * @author: xsword
@@ -7,7 +9,7 @@ package cn.xsword.sshmanage.util;
  * @description: 针对字符串的一些工具
  **/
 public class StringUtil {
-    
+    private static char[] dict = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
     /**
      * @Description: 检查字符串token是否含有内容
      * @Author: xsword
@@ -24,5 +26,18 @@ public class StringUtil {
             return "";
         }
         return object.toString();
+    }
+
+    public static String randomString(int len) {
+        Random random = new Random();
+        StringBuilder stringBuilder = new StringBuilder(len);
+
+        // 生成随机字符并添加到StringBuilder
+        for (int i = 0; i < len; i++) {
+            int index = random.nextInt(dict.length);
+            stringBuilder.append(dict[index]);
+        }
+
+        return stringBuilder.toString();
     }
 }

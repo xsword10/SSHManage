@@ -26,6 +26,10 @@ function refreshCookie() {
     });
 }
 
+function hasCookie(key) {
+    return new RegExp('(^|;\\s*)${encodeURIComponent(key)}=').test(document.cookie);
+}
+
 function setCookie(key, value) {
     refreshCookie();
     $.cookie(key, value, {path: cookiesPath, expires: cookiesTime});
@@ -53,6 +57,7 @@ function clearCookieSingle(name) {
 function isLoginFun() {
     var isLogin = getCookie('isLogin');
     if(isLogin != "1") {
+        alert("用户未登陆！请先前往登陆！");
         window.location.href = '../page/login.html';
     }
 }

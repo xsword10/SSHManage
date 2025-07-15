@@ -5,9 +5,9 @@ import cn.xsword.sshmanage.entity.User;
 public interface UserService {
     public int insertUser(User user);
 
-    public int updateUser(User user);
+    public int updateUserByUsername(User user);
 
-    public int deleteUserById(Integer id);
+    public int deleteUserById(Long id);
 
     public int selectUser(User user);
 

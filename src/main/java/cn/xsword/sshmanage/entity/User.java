@@ -22,4 +22,6 @@ public class User {
     private long userId;
     private String username;
     private String password;
+    private String photo;
+    private String nickname;
 }

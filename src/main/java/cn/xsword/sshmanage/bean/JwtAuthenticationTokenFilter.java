@@ -45,11 +45,21 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             userid = claims.getSubject();
         } catch (Exception e) {
             throw new RuntimeException(e);
+            /*
+             *TODO
+             * spring security处理token不合法时无法到达Controller层，
+             * 即无法返回错误信息给前端，
+             * 故在此不throw exception，而是先放行return，再在Controller层处理错误。
+             */
+//            logger.error("token不合法!");
+//            filterChain.doFilter(request, response);
+//            return;
         }
 
         User user = userMapper.selectById(userid);
 
         if(user == null) {
+            logger.error("用户不存在！");
             throw new RuntimeException("用户未登陆！请先登陆以使用更多功能呢～");
         }
 

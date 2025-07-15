@@ -2,13 +2,12 @@ package cn.xsword.sshmanage.controller;
 
 import cn.xsword.sshmanage.DTO.LoginDTO;
 import cn.xsword.sshmanage.DTO.UserDTO;
+import cn.xsword.sshmanage.DTO.UserInfoDTO;
 import cn.xsword.sshmanage.DTO.UserRegisterDTO;
 import cn.xsword.sshmanage.entity.User;
 import cn.xsword.sshmanage.entity.UserDetailsImpl;
 import cn.xsword.sshmanage.service.UserService;
-import cn.xsword.sshmanage.util.InputVerify;
-import cn.xsword.sshmanage.util.JwtUtil;
-import cn.xsword.sshmanage.util.SSHManageResponse;
+import cn.xsword.sshmanage.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -61,8 +60,8 @@ public class UserController {
             String jwt = JwtUtil.createJWT(String.valueOf(user.getUserId()));
             LoginDTO loginDTO = new LoginDTO();
             loginDTO.setUsername(username);
-            loginDTO.setNickname("里斯特");
-            loginDTO.setPhoto("../picture/default.jpg");
+            loginDTO.setNickname(user.getNickname());
+            loginDTO.setPhoto(user.getPhoto());
             loginDTO.setJwt(jwt);
 
             return SSHManageResponse.success("登陆成功！", loginDTO);
@@ -104,6 +103,8 @@ public class UserController {
                 user.setUsername(username);
                 String encodePassword = passwordEncoder.encode(password);
                 user.setPassword(encodePassword);
+                user.setNickname(StringUtil.randomString(CommanValue.NICKNAME_LENGTH));
+                user.setPhoto(CommanValue.defaultPhoto);
                 userService.insertUser(user);
                 return SSHManageResponse.success("注册成功！欢迎您成为高贵的SSHManage用户!");
             }else {
@@ -117,10 +118,50 @@ public class UserController {
         }
     }
 
+    /**
+     * @Description: 更新用户信息，包括昵称、密码。
+     * @Author: xsword
+     * @Date: 2025/7/14
+    **/
+    @CrossOrigin
+    @PostMapping("updateUser")
+    public SSHManageResponse updateUserInfo(@RequestBody UserInfoDTO userInfoDTO) {
+        String password = userInfoDTO.getPassword();
+        if(!InputVerify.passwordVerify(password)) {
+            return SSHManageResponse.error("密码不合法，请重新输入！");
+        }
+        String nickname = userInfoDTO.getNickname();
+        if(!InputVerify.nicknameVerify(nickname)) {
+            return SSHManageResponse.error("昵称不合法，请重新输入！");
+        }
+        try {
+            User user = new User();
+            user.setNickname(nickname);
+            user.setUsername(userInfoDTO.getUsername());
+            user.setPassword(passwordEncoder.encode(password));
+            userService.updateUserByUsername(user);
+            System.out.println(StringUtil.objectToString(user));
+            return SSHManageResponse.success("用户信息更新成功！", user);
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            return SSHManageResponse.error("用户信息更新失败！更新过程被资本做局，发生了未知异常！");
+        }finally {
+            ;
+        }
+    }
+    
+    /**
+     * @Description: 用户登出功能，后续可能要引入redis、与jwt结合，在登出时实效jwt。
+     * @Author: xsword
+     * @Date: 2025/7/10
+    **/
     @CrossOrigin
     @PostMapping("/logout")
     public SSHManageResponse logout() {
-        System.out.println("=================");
-        return SSHManageResponse.success("?");
+        /*
+         *TODO
+         * jwt + redis
+         */
+        return SSHManageResponse.success("用户登出！期待您的下次光临～");
     }
 }

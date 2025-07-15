@@ -1,5 +1,7 @@
 package cn.xsword.sshmanage.util;
 
+import cn.xsword.sshmanage.entity.Machine;
+
 /**
  * @Program: sshManage
  * @author: xsword
@@ -35,5 +37,23 @@ public class InputVerify {
             }
         }
         return true;
+    }
+
+    public static boolean nicknameVerify(String nickname) {
+        if(nickname == null) {
+            return false;
+        }
+        if(nickname.length() > 10) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean inputNotNull(String input) {
+        return !(input == null || input.isBlank());
+    }
+
+    public static boolean machineInputVerify(Machine machine) {
+        return inputNotNull(machine.getIp()) && inputNotNull(machine.getHostname()) && inputNotNull(machine.getPassword());
     }
 }

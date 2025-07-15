@@ -3,6 +3,7 @@ package cn.xsword.sshmanage.service.impl;
 import cn.xsword.sshmanage.entity.User;
 import cn.xsword.sshmanage.mapper.UserMapper;
 import cn.xsword.sshmanage.service.UserService;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +38,10 @@ public class UserServiceImpl implements UserService {
      * @Date: 2025/7/9
     **/
     @Override
-    public int updateUser(User user) {
-        return 0;
+    public int updateUserByUsername(User user) {
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("username",user.getUsername()).set("password",user.getPassword()).set("nickname",user.getNickname());
+        return userMapper.update(null, updateWrapper);
     }
 
     /**
@@ -47,7 +50,7 @@ public class UserServiceImpl implements UserService {
      * @Date: 2025/7/9
     **/
     @Override
-    public int deleteUserById(Integer id) {
+    public int deleteUserById(Long id) {
         return 0;
     }
 
