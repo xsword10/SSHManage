@@ -1,6 +1,7 @@
 package cn.xsword.sshmanage.controller;
 
 import cn.xsword.sshmanage.DTO.MachineDTO;
+import cn.xsword.sshmanage.DTO.UserInfoDTO;
 import cn.xsword.sshmanage.entity.Machine;
 import cn.xsword.sshmanage.service.MachineService;
 import cn.xsword.sshmanage.util.ClassConvert;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Program: sshManage
@@ -27,6 +30,13 @@ public class MachineController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    /*
+     *TODO
+     * machine 与 userid 关联。因此在请求machine时要附带userid或者username（去查userid）。
+     * 可是jwt加密内容为userid，考虑在通过spring security后取出userid -> redis，用以后续业务。
+     */
+    private ThreadLocal<UserInfoDTO> threadLocal;
 
     /**
      * @Description: 新建连接，允许格式等不合法但不允许关键信息为空。port可为0即默认22端口。
@@ -71,5 +81,16 @@ public class MachineController {
     @PostMapping("selectMachine")
     public SSHManageResponse selectMachine(@RequestBody Machine machine) {
         return null;
+    }
+
+    /**
+     * @Description: 返回machine列表
+     * @Author: xsword
+     * @Date: 2025/7/17
+    **/
+    @PostMapping("listMachine")
+    public SSHManageResponse listMachine(@RequestParam Long userId) {
+        List<Machine> machineList = machineService.listMachines(userId);
+        return SSHManageResponse.success("machineList", machineList);
     }
 }

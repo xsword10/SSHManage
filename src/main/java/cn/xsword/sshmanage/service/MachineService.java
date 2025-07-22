@@ -3,6 +3,8 @@ package cn.xsword.sshmanage.service;
 
 import cn.xsword.sshmanage.entity.Machine;
 
+import java.util.List;
+
 public interface MachineService {
     public int insertMachine(Machine machine);
 
@@ -13,4 +15,6 @@ public interface MachineService {
     public int selectMachine(Machine machine);
 
     public int selectMachineById(Long id);
+
+    public List<Machine> listMachines(Long userId);
 }

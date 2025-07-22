@@ -44,7 +44,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             Claims claims = JwtUtil.parseJWT(header);
             userid = claims.getSubject();
         } catch (Exception e) {
-            throw new RuntimeException(e);
             /*
              *TODO
              * spring security处理token不合法时无法到达Controller层，
@@ -54,6 +53,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 //            logger.error("token不合法!");
 //            filterChain.doFilter(request, response);
 //            return;
+            logger.error("Token不合法!" + e.getMessage());
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().print("Token不合法!");
+            filterChain.doFilter(request, response);
+            return;
         }
 
         User user = userMapper.selectById(userid);

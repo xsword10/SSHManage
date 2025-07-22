@@ -6,6 +6,10 @@ import cn.xsword.sshmanage.service.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Program: sshManage
  * @author: xsword
@@ -45,5 +49,11 @@ public class MachineServiceImpl implements MachineService {
     @Override
     public int selectMachineById(Long id) {
         return machineMapper.selectById(id) ==  null ? 0 : 1;
+    }
+
+    @Override
+    public List<Machine> listMachines(Long userId) {
+        List<Machine> machineList = machineMapper.selectByMap((Map<String, Object>) new HashMap<>().put("user_id", userId));
+        return machineList;
     }
 }

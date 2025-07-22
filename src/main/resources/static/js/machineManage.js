@@ -20,7 +20,8 @@ function userLogout() {
             window.location.href = '../page/login.html';
         },
         error: function(xhr, status, error) {
-
+            alert("发生异常！请重新登陆！")
+            window.location.href = '../page/login.html';
         }
     })
 }
@@ -89,6 +90,8 @@ function updateUserInfo() {
         error: function (jqXHR, textStatus, errorThrown) {
             // alert(jqXHR);
             //  //console.log(jqXHR);
+            alert("发生异常！请重新登陆！")
+            window.location.href = '../page/login.html';
         },
     });
 }
