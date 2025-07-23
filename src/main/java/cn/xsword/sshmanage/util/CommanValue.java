@@ -10,5 +10,5 @@ public class CommanValue {
     public static int NICKNAME_LENGTH = 10;
     public static int PASSWORD_LENGTH = 16;
     public static int USERNAME_LENGTH = 16;
-    public static String defaultPhoto = "default.jpg";
+    public static String defaultPhoto = "../picture/default.jpg";
 }

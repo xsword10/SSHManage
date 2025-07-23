@@ -20,7 +20,6 @@ function userLogout() {
             window.location.href = '../page/login.html';
         },
         error: function(xhr, status, error) {
-            alert("发生异常！请重新登陆！")
             window.location.href = '../page/login.html';
         }
     })
@@ -94,4 +93,11 @@ function updateUserInfo() {
             window.location.href = '../page/login.html';
         },
     });
+}
+
+function onload() {
+    document.getElementById("nickname").innerText = getCookie('nickname');
+    document.getElementById('username').innerText = getCookie('username');
+    const img = document.getElementById('img')
+    img.src = getCookie('photo');
 }

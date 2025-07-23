@@ -5,18 +5,18 @@
     <title>SSHManage</title>
     <link rel="stylesheet" type="text/css" href="../css/machine.css">
 </head>
-<body>
+<body onload="onload()">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="../js/common.js" type="text/javascript"></script>
     <script src="../js/machineManage.js" type="text/javascript"></script>
     <div class="grid-container">
         <div class="sidebar">
-            <div class="image"></div>
-            <div class="text">nickname</div>
-            <div class="text">username</div>
-            <button id="logout" name="logout" class="btn" onclick="userLogout()">Logout</button>
+            <img class="image" id="img" src="" alt=""></img>
+            <div class="text" id="nickname">nickname</div>
+            <div class="text" id="username">username</div>
             <button id="updateUserInfo" name="updateUserInfo" class="btn" onclick="gotoUpdateUserInfo()">updateUserInfo</button>
+            <button id="logout" name="logout" class="btn" onclick="userLogout()">Logout</button>
         </div>
         <div class="main-content">
             <div class="header">
