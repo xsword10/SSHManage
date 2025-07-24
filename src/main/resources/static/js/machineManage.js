@@ -11,7 +11,7 @@ function userLogout() {
         },
         data: JSON.stringify(null),
         success: function(result) {
-            deleteCookie('userName');
+            deleteCookie('username');
             deleteCookie('isLogin');
             deleteCookie('jwt');
             deleteCookie('nickname');
@@ -100,4 +100,82 @@ function onload() {
     document.getElementById('username').innerText = getCookie('username');
     const img = document.getElementById('img')
     img.src = getCookie('photo');
+}
+
+function addMachine() {
+    document.getElementById("add").style.display = "block";
+    document.getElementById("bck").style.display = "block";
+}
+
+function commitMachineInfo() {
+    var ip = document.getElementById('ip');
+    var hostname = document.getElementById('hostname');
+    var port = document.getElementById('port');
+    var password = document.getElementById('password');
+    if (!ip.value) {
+        alert("请先输入ip");
+        host.focus();
+        return;
+    }
+    if(!hostname.value) {
+        alert("请输入hostname");
+        user.focus();
+        return;
+    }
+    if(port.value) {
+        if(isNaN(Number(port.value))) {
+            alert("port的值应为一个整数！");
+            port.focus();
+            return;
+        }
+    }
+    if(!password.value) {
+        alert("请输入密码");
+        password.focus();
+        return;
+    }
+
+    var ipText = $("#ip").val();
+    var hostnameText = $("#hostname").val();
+    var portText = 22;
+    if(port.value) {
+        portText = $("#port").val();
+    }
+    var passwordTest = $("#password").val();
+    var contentText = $("#content").val();
+
+    var da = {
+        "username":getCookie('username'),
+        "ip":ipText,
+        "hostname":hostnameText,
+        "port":portText,
+        "password":passwordTest,
+        "content":contentText
+    };
+    $.ajax({
+        "async": true,
+        "url": "http://localhost:8080/machine/addMachine",
+        "type": "POST",
+        "data": JSON.stringify(da),
+        "dataType": "json",
+        "contentType": "application/json",
+        "headers": {
+            'Authorization': `Bearer ${token}`
+        },
+        success: function (result) {
+            if(result.code == 200) {
+                alert(result.message);
+                window.location.href = "../page/machineManage.html";
+            }else {
+                alert(result.message);
+                window.location.href = "../page/machineManage.html";
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            // alert(jqXHR);
+            //  //console.log(jqXHR);
+            alert("发生异常！请重新登陆！")
+            window.location.href = '../page/login.html';
+        },
+    });
 }

@@ -1,5 +1,6 @@
 package cn.xsword.sshmanage.util;
 
+import cn.xsword.sshmanage.DTO.AddMachineDTO;
 import cn.xsword.sshmanage.DTO.MachineDTO;
 import cn.xsword.sshmanage.entity.Machine;
 
@@ -18,5 +19,15 @@ public class ClassConvert {
         machineDTO.setPort(machine.getPort());
         machineDTO.setContent(machine.getContent());
         return machineDTO;
+    }
+
+    public static Machine convert(AddMachineDTO machine) {
+        Machine result = new Machine();
+        result.setIp(machine.getIp());
+        result.setHostname(machine.getHostname());
+        result.setPort(machine.getPort());
+        result.setContent(machine.getContent());
+        result.setPassword(machine.getPassword());
+        return result;
     }
 }

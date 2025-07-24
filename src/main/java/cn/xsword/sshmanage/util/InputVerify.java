@@ -1,5 +1,6 @@
 package cn.xsword.sshmanage.util;
 
+import cn.xsword.sshmanage.DTO.AddMachineDTO;
 import cn.xsword.sshmanage.entity.Machine;
 
 /**
@@ -53,7 +54,7 @@ public class InputVerify {
         return !(input == null || input.isBlank());
     }
 
-    public static boolean machineInputVerify(Machine machine) {
-        return inputNotNull(machine.getIp()) && inputNotNull(machine.getHostname()) && inputNotNull(machine.getPassword());
+    public static boolean machineInputVerify(AddMachineDTO machine) {
+        return inputNotNull(machine.getUsername()) && inputNotNull(machine.getIp()) && inputNotNull(machine.getHostname()) && inputNotNull(machine.getPassword());
     }
 }

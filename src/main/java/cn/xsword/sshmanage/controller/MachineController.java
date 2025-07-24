@@ -1,12 +1,14 @@
 package cn.xsword.sshmanage.controller;
 
-import cn.xsword.sshmanage.DTO.MachineDTO;
+import cn.xsword.sshmanage.DTO.AddMachineDTO;
 import cn.xsword.sshmanage.DTO.UserInfoDTO;
 import cn.xsword.sshmanage.entity.Machine;
 import cn.xsword.sshmanage.service.MachineService;
+import cn.xsword.sshmanage.service.UserService;
 import cn.xsword.sshmanage.util.ClassConvert;
 import cn.xsword.sshmanage.util.InputVerify;
 import cn.xsword.sshmanage.util.SSHManageResponse;
+import cn.xsword.sshmanage.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +29,8 @@ public class MachineController {
     @Autowired
     private MachineService machineService;
     @Autowired
+    private UserService userService;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -46,18 +50,19 @@ public class MachineController {
     **/
     @CrossOrigin
     @PostMapping("addMachine")
-    public SSHManageResponse addMachine(@RequestBody Machine machine) {
+    public SSHManageResponse addMachine(@RequestBody AddMachineDTO machine) {
+        System.out.println(StringUtil.objectToString(machine));
         if(!InputVerify.machineInputVerify(machine)) {
-            return SSHManageResponse.error("ssh 连接信息不合法，请重新输入！");
+            return SSHManageResponse.error("连接信息不合法，请重新输入！");
         }
         try {
-            MachineDTO machineDTO = ClassConvert.machineConvertMachineDTO(machine);
-            machine.setPassword(passwordEncoder.encode(machine.getPassword()));
-            machineService.insertMachine(machine);
-            return SSHManageResponse.success("连接信息保存成功！", machineDTO);
-        }catch(Exception e) {
+            Machine m = ClassConvert.convert(machine);
+            m.setUserId(userService.getUserIdByUsername(machine.getUsername()));
+            machineService.insertMachine(m);
+            return SSHManageResponse.success("连接信息保存成功！");
+        }catch(Exception e){
             System.out.println(e.getMessage());
-            return SSHManageResponse.error("连接信息保存失败！请重新尝试！");
+            return SSHManageResponse.error("添加machine失败，请重新尝试！");
         }finally {
             ;
         }

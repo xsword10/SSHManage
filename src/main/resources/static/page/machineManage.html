@@ -23,8 +23,24 @@
                 <b class="text_top">ssh manage</b>
                 <button id="addMachine" name="addMachine" class="btn_top" onclick="addMachine()">addMachine</button>
             </div>
-            <div class="content">主要内容</div>
-            <div class="footer">底部</div>
+            <div class="content">
+                <div class="machine-wrapper" id="bck">
+                    <form name="add" class="form-popup" id="add">
+                        <p>ip</p>
+                        <input type="text" id = "ip" name="ip" placeholder="ip" class="input-item">
+                        <p>hostname</p>
+                        <input type="text" id = "hostname" name="hostname" placeholder="hostname" class="input-item">
+                        <p>port</p>
+                        <input type="text" id = "port" name="port" placeholder="port:22" class="input-item">
+                        <p>password</p>
+                        <input type="password" id = "password" name="password" placeholder="password" class="input-item">
+                        <p>content</p>
+                        <input type="text" id = "content" name="content" placeholder="content" class="input-item">
+                        <button type="button" class="add-btn" onclick="commitMachineInfo()">add</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer">all right@xsword</div>
         </div>
     </div>
 </body>

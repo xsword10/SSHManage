@@ -82,4 +82,14 @@ public class UserServiceImpl implements UserService {
         List<User> list = userMapper.selectByMap(map);
         return list.size();
     }
+
+    @Override
+    public long getUserIdByUsername(String username) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("username",username);
+        List<User> list = userMapper.selectByMap(map);
+        if(list.isEmpty())
+            return -1;
+        return list.get(0).getUserId();
+    }
 }

@@ -12,4 +12,6 @@ public interface UserService {
     public int selectUser(User user);
 
     public int selectUserByUsername(String username);
+
+    public long getUserIdByUsername(String username);
 }
