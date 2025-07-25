@@ -47,6 +47,11 @@ public class MachineServiceImpl implements MachineService {
     }
 
     @Override
+    public Machine selectById(Long id) {
+        return machineMapper.selectById(id);
+    }
+
+    @Override
     public int selectMachineById(Long id) {
         return machineMapper.selectById(id) ==  null ? 0 : 1;
     }

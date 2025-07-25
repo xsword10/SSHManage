@@ -78,10 +78,10 @@ public class MachineController {
     @PostMapping("deleteMachine")
     public SSHManageResponse deleteMachine(@RequestBody DeleteMachineDTO deleteMachine) {
         System.out.println("=============");
-        try{
+        try {
             machineService.deleteMachineById(deleteMachine.getId());
             return SSHManageResponse.success("删除成功！");
-        }catch (Exception e) {
+        }catch(Exception e) {
             System.out.println(e.getMessage());
             return SSHManageResponse.error("遇到未知错误，请重试！");
         }finally {
@@ -94,9 +94,18 @@ public class MachineController {
         return null;
     }
 
-    @PostMapping("selectMachine")
-    public SSHManageResponse selectMachine(@RequestBody Machine machine) {
-        return null;
+    @CrossOrigin
+    @PostMapping("connect")
+    public SSHManageResponse machineConnect(@RequestBody DeleteMachineDTO machine) {
+        try {
+            Machine res = machineService.selectById(machine.getId());
+            return SSHManageResponse.success("连接成功！", res);
+        }catch(Exception e) {
+            System.out.println(e.getMessage());
+            return SSHManageResponse.error("连接失败！");
+        }finally {
+            ;
+        }
     }
 
     /**

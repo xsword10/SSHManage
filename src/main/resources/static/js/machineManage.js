@@ -177,7 +177,42 @@ function deleteMachine(event) {
 }
 
 function connectMachine() {
-
+    var rank = event.target.getAttribute('data-row');
+    var da = {
+        "id": machines[rank].id
+    }
+    $.ajax({
+        "async": true,
+        "url": "http://localhost:8080/machine/connect",
+        "type": "POST",
+        "data": JSON.stringify(da),
+        "dataType": "json",
+        "contentType": "application/json",
+        "headers": {
+            'Authorization': `Bearer ${token}`
+        },
+        success: function (result) {
+            if(result.code == 200) {
+                var data = result.data;
+                alert(result.message + data.ip + data.hostname + data.password + data.port);
+                /*TODO
+                ** 根据获取到的machine info，建立ssh连接
+                ** 目前计划实现命令行交互及文件界面交互两种连接方式。
+                 */
+            }else {
+                alert(result.message);
+                userLogout();
+                window.location.href = "../page/login.html";
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            // alert(jqXHR);
+            //  //console.log(jqXHR);
+            alert("发生异常！请重新登陆！");
+            userLogout();
+            window.location.href = '../page/login.html';
+        },
+    });
 }
 
 function addMachine() {

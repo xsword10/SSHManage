@@ -14,6 +14,8 @@ public interface MachineService {
 
     public int selectMachine(Machine machine);
 
+    Machine selectById(Long id);
+
     public int selectMachineById(Long id);
 
     public List<Machine> listMachines(Long userId);
