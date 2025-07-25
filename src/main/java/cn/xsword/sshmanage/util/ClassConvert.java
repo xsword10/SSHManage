@@ -4,6 +4,9 @@ import cn.xsword.sshmanage.DTO.AddMachineDTO;
 import cn.xsword.sshmanage.DTO.MachineDTO;
 import cn.xsword.sshmanage.entity.Machine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @Program: sshManage
  * @author: xsword
@@ -11,14 +14,18 @@ import cn.xsword.sshmanage.entity.Machine;
  * @description: 用以实现一些类的转化
  **/
 public class ClassConvert {
-    public static MachineDTO machineConvertMachineDTO(Machine machine) {
-        MachineDTO machineDTO = new MachineDTO();
-        machineDTO.setId(machine.getMachineId());
-        machineDTO.setIp(machine.getIp());
-        machineDTO.setHostname(machine.getHostname());
-        machineDTO.setPort(machine.getPort());
-        machineDTO.setContent(machine.getContent());
-        return machineDTO;
+    public static List<MachineDTO> convert(List<Machine> machines) {
+        List<MachineDTO> machineDTOs = new ArrayList<>();
+        for(int i = 0; i < machines.size(); i++) {
+            MachineDTO machineDTO = new MachineDTO();
+            machineDTO.setId(i + 1L);
+            machineDTO.setIp(machines.get(i).getIp());
+            machineDTO.setPort(machines.get(i).getPort());
+            machineDTO.setHostname(machines.get(i).getHostname());
+            machineDTO.setContent(machines.get(i).getContent());
+            machineDTOs.add(machineDTO);
+        }
+        return machineDTOs;
     }
 
     public static Machine convert(AddMachineDTO machine) {

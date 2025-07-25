@@ -36,8 +36,28 @@
                         <input type="password" id = "password" name="password" placeholder="password" class="input-item">
                         <p>content</p>
                         <input type="text" id = "content" name="content" placeholder="content" class="input-item">
-                        <button type="button" class="add-btn" onclick="commitMachineInfo()">add</button>
+                        <div class="table-btn">
+                            <button type="button" class="table-b-btn-l" onclick="commitMachineInfo()">add</button>
+                            <button type="button" class="table-b-btn-r" onclick="back()">back</button>
+                        </div>
                     </form>
+                </div>
+                <div class="machines" id="machines">
+                    <table class="table" id="table">
+                        <thead>
+                            <tr>
+                                <td>machineId</td>
+                                <td>ip</td>
+                                <td>hostname</td>
+                                <td>port</td>
+                                <td class="td-c">content</td>
+                                <td class="td-c">options</td>
+                            </tr>
+                        </thead>
+                        <tbody class="table_node" id="table_node">
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="footer">all right@xsword</div>

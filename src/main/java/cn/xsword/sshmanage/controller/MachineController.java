@@ -1,6 +1,8 @@
 package cn.xsword.sshmanage.controller;
 
 import cn.xsword.sshmanage.DTO.AddMachineDTO;
+import cn.xsword.sshmanage.DTO.DeleteMachineDTO;
+import cn.xsword.sshmanage.DTO.ListMachineDTO;
 import cn.xsword.sshmanage.DTO.UserInfoDTO;
 import cn.xsword.sshmanage.entity.Machine;
 import cn.xsword.sshmanage.service.MachineService;
@@ -51,7 +53,6 @@ public class MachineController {
     @CrossOrigin
     @PostMapping("addMachine")
     public SSHManageResponse addMachine(@RequestBody AddMachineDTO machine) {
-        System.out.println(StringUtil.objectToString(machine));
         if(!InputVerify.machineInputVerify(machine)) {
             return SSHManageResponse.error("连接信息不合法，请重新输入！");
         }
@@ -73,9 +74,19 @@ public class MachineController {
      * @Author: xsword
      * @Date: 2025/7/15
     **/
+    @CrossOrigin
     @PostMapping("deleteMachine")
-    public SSHManageResponse deleteMachine(@RequestBody Machine machine) {
-        return null;
+    public SSHManageResponse deleteMachine(@RequestBody DeleteMachineDTO deleteMachine) {
+        System.out.println("=============");
+        try{
+            machineService.deleteMachineById(deleteMachine.getId());
+            return SSHManageResponse.success("删除成功！");
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            return SSHManageResponse.error("遇到未知错误，请重试！");
+        }finally {
+            ;
+        }
     }
 
     @PostMapping("updateMachine")
@@ -93,9 +104,11 @@ public class MachineController {
      * @Author: xsword
      * @Date: 2025/7/17
     **/
+    @CrossOrigin
     @PostMapping("listMachine")
-    public SSHManageResponse listMachine(@RequestParam Long userId) {
+    public SSHManageResponse listMachine(@RequestBody ListMachineDTO listMachineDTO) {
+        Long userId = userService.getUserIdByUsername(listMachineDTO.getUsername());
         List<Machine> machineList = machineService.listMachines(userId);
-        return SSHManageResponse.success("machineList", machineList);
+        return SSHManageResponse.success("machineList", ClassConvert.convert(machineList));
     }
 }
