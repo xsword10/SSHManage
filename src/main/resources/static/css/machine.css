@@ -157,7 +157,7 @@ table {
     margin-top: 0;
     margin-left: 2.5%;
     width: 95%;
-    height: 98%;
+    height: 93%;
     border: 3px solid #00ccff;
     background-color: #f1f1f1;
 }
@@ -166,7 +166,7 @@ tr,
 td {
     align-content: center;
     text-align: center;
-    height: 50px;
+    height: 40px;
     padding: 5px 10px;
     width: 100px;
     border: solid 1px #ffffff;
@@ -175,7 +175,7 @@ td {
 .td-c {
     align-content: center;
     text-align: center;
-    height: 50px;
+    height: 40px;
     padding: 5px 10px;
     width: 200px;
 }
@@ -221,4 +221,37 @@ td {
     border-radius: 15px;
     background-image: linear-gradient(to right, #a6c1ee, #fbc2eb);
     color: #fff;
+}
+
+.pages {
+    display: flex;
+    justify-content: center;
+    padding: 2px 0;
+    margin-top: 1px;
+    margin-left: 2.5%;
+    width: 95%;
+    height: 6%;
+    background-color: #f1f1f1;
+}
+
+.pages a {
+    cursor: pointer;
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    background-color: #ffffff;
+}
+
+.pages a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+.pages a:hover:not(.active) {
+    background-color: #ddd;
 }

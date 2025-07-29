@@ -15,6 +15,7 @@ import lombok.*;
 @Setter
 public class MachineDTO {
     Long id;
+    Long machineId;
     String ip;
     String hostname;
     Integer port;

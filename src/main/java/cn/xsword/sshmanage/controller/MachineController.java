@@ -1,9 +1,6 @@
 package cn.xsword.sshmanage.controller;
 
-import cn.xsword.sshmanage.DTO.AddMachineDTO;
-import cn.xsword.sshmanage.DTO.DeleteMachineDTO;
-import cn.xsword.sshmanage.DTO.ListMachineDTO;
-import cn.xsword.sshmanage.DTO.UserInfoDTO;
+import cn.xsword.sshmanage.DTO.*;
 import cn.xsword.sshmanage.entity.Machine;
 import cn.xsword.sshmanage.service.MachineService;
 import cn.xsword.sshmanage.service.UserService;
@@ -11,11 +8,16 @@ import cn.xsword.sshmanage.util.ClassConvert;
 import cn.xsword.sshmanage.util.InputVerify;
 import cn.xsword.sshmanage.util.SSHManageResponse;
 import cn.xsword.sshmanage.util.StringUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -77,7 +79,6 @@ public class MachineController {
     @CrossOrigin
     @PostMapping("deleteMachine")
     public SSHManageResponse deleteMachine(@RequestBody DeleteMachineDTO deleteMachine) {
-        System.out.println("=============");
         try {
             machineService.deleteMachineById(deleteMachine.getId());
             return SSHManageResponse.success("删除成功！");
@@ -109,6 +110,18 @@ public class MachineController {
     }
 
     /**
+     * @Description: 获取user的machine num，给前端计算pages。
+     * @Author: xsword
+     * @Date: 2025/7/29
+    **/
+    @CrossOrigin
+    @PostMapping("countMachines")
+    public SSHManageResponse getMachineNum(@RequestBody ListMachineDTO listMachineDTO) {
+        Long userId = userService.getUserIdByUsername(listMachineDTO.getUsername());
+        return SSHManageResponse.success("machine count", machineService.getMachineNum(userId));
+    }
+
+    /**
      * @Description: 返回machine列表
      * @Author: xsword
      * @Date: 2025/7/17
@@ -117,7 +130,10 @@ public class MachineController {
     @PostMapping("listMachine")
     public SSHManageResponse listMachine(@RequestBody ListMachineDTO listMachineDTO) {
         Long userId = userService.getUserIdByUsername(listMachineDTO.getUsername());
-        List<Machine> machineList = machineService.listMachines(userId);
-        return SSHManageResponse.success("machineList", ClassConvert.convert(machineList));
+        //Timestamp startTime = Timestamp.valueOf(LocalDateTime.now());
+        PageInfo<Machine> machineList = machineService.listMachines(userId, listMachineDTO.getPageNum(), listMachineDTO.getPageSize());
+        //Timestamp endTime = Timestamp.valueOf(LocalDateTime.now());
+        List<Machine> machineLists = machineList.getList();
+        return SSHManageResponse.success("machinePageList", ClassConvert.convert(machineLists, listMachineDTO.getPageNum(), listMachineDTO.getPageSize()));
     }
 }

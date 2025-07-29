@@ -1,4 +1,5 @@
 var token = getCookie('jwt');
+var pages = 1;
 
 function userLogout() {
     isLoginFun();
@@ -104,12 +105,17 @@ function onload() {
     const img = document.getElementById('img')
     img.src = getCookie('photo');
 
+    countMachines();
+    listMachines();
+}
+
+function countMachines() {
     var da = {
-        "username":getCookie('username')
+        "username": getCookie('username')
     }
     $.ajax({
         "async": true,
-        "url": "http://localhost:8080/machine/listMachine",
+        "url": "http://localhost:8080/machine/countMachines",
         "type": "POST",
         "data": JSON.stringify(da),
         "dataType": "json",
@@ -119,17 +125,12 @@ function onload() {
         },
         success: function (result) {
             if(result.code == 200) {
-                $('.table_node').empty();
-                machines = result.data;
-                $.each(machines, function(index, n) {
-                    var child = `<tr><td>${machines[index].id}</td><td>${machines[index].ip}</td><td>${machines[index].hostname}</td><td>${machines[index].port}</td><td>${machines[index].content}</td><td> <button data-row="${index}"type="button" class="td-btn" onclick="connectMachine()">connect</button>
-<button data-row="${index}"type="button" class="td-btn" onclick="deleteMachine(event)">delete</button></td>`;
-
-                    $(".table_node").append(child)
-                });
-            }else {
-                alert(result.message);
-                window.location.href = "../page/login.html";
+                var count = result.data;
+                setCookie('countMachine', count);
+                var pages = Math.floor(count / 10);
+                if(count % 10 !== 0)
+                    pages++;
+                setCookie('pages', pages);
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -144,7 +145,7 @@ function onload() {
 function deleteMachine(event) {
     var rank = event.target.getAttribute('data-row');
     var da = {
-        "id": machines[rank].id
+        "id": machines[rank].machineId
     }
     $.ajax({
         "async": true,
@@ -179,7 +180,7 @@ function deleteMachine(event) {
 function connectMachine() {
     var rank = event.target.getAttribute('data-row');
     var da = {
-        "id": machines[rank].id
+        "id": machines[rank].machineId
     }
     $.ajax({
         "async": true,
@@ -288,6 +289,61 @@ function commitMachineInfo() {
             }else {
                 alert(result.message);
                 window.location.href = "../page/machineManage.html";
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            // alert(jqXHR);
+            //  //console.log(jqXHR);
+            alert("发生异常！请重新登陆！")
+            window.location.href = '../page/login.html';
+        },
+    });
+}
+
+function upPage() {
+    if(pages > 1) {
+        pages--;
+        listMachines();
+    }
+}
+
+function downPage() {
+    if(pages < getCookie('pages')) {
+        pages++;
+        listMachines();
+    }
+}
+
+function listMachines() {
+    var da = {
+        "username": getCookie('username'),
+        "pageNum": pages,
+        "pageSize": 10
+    }
+    $.ajax({
+        "async": true,
+        "url": "http://localhost:8080/machine/listMachine",
+        "type": "POST",
+        "data": JSON.stringify(da),
+        "dataType": "json",
+        "contentType": "application/json",
+        "headers": {
+            'Authorization': `Bearer ${token}`
+        },
+        success: function (result) {
+            if(result.code == 200) {
+                $('.table_node').empty();
+                machines = result.data;
+                $.each(machines, function(index, n) {
+                    var child = `<tr><td>${machines[index].id}</td><td>${machines[index].ip}</td><td>${machines[index].hostname}</td><td>${machines[index].port}</td><td>${machines[index].content}</td><td> <button data-row="${index}"type="button" class="td-btn" onclick="connectMachine()">connect</button>
+<button data-row="${index}"type="button" class="td-btn" onclick="deleteMachine(event)">delete</button></td>`;
+
+                    $(".table_node").append(child)
+                });
+                document.getElementById("page").innerText = pages;
+            }else {
+                alert(result.message);
+                window.location.href = "../page/login.html";
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {

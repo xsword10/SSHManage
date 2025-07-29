@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 /**
  * @Program: sshManage
  * @author: xsword
@@ -26,4 +29,6 @@ public class Machine {
     private String password;
     private int port;
     private String content;
+    private Timestamp createTime;
+    //private Date updateTime;
 }

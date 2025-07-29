@@ -14,11 +14,13 @@ import java.util.List;
  * @description: 用以实现一些类的转化
  **/
 public class ClassConvert {
-    public static List<MachineDTO> convert(List<Machine> machines) {
+    public static List<MachineDTO> convert(List<Machine> machines, int pageNum, int pageSize) {
         List<MachineDTO> machineDTOs = new ArrayList<>();
+        int start = (pageNum - 1) * pageSize;
         for(int i = 0; i < machines.size(); i++) {
             MachineDTO machineDTO = new MachineDTO();
-            machineDTO.setId(i + 1L);
+            machineDTO.setId(i + start + 1L);
+            machineDTO.setMachineId(machines.get(i).getMachineId());
             machineDTO.setIp(machines.get(i).getIp());
             machineDTO.setPort(machines.get(i).getPort());
             machineDTO.setHostname(machines.get(i).getHostname());
